@@ -97,7 +97,7 @@ class FleetCounter:
     def processLine(self, line):
         '''Parse one line and check each item.'''
         try:
-            host, instance, n, slots = line.split(',', 3) # check errors
+            host, instance, n, slots = line.split(',', 3)
         except:
             sys.stderr.write("{} '{}'\n".format("Can not parse line: ", line))
             raise
