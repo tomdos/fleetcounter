@@ -1,48 +1,7 @@
 #!/usr/bin/env  python3
 
 import sys
-
-class DataSource:
-    '''Data source wraper for input.'''
-    def __init__(self, filename="FleetState.txt"):
-        self.filename = filename
-
-    def open(self):
-        try:
-            self.fd = open(self.filename,"r")
-        except (FileNotFoundError, PermissionError):
-            sys.stderr.write("Unable to open input file '{}'.\n".format(self.filename))
-            raise
-        except:
-            raise
-                        
-        return self.fd
-
-    def close(self):
-        self.fd.close()
-
-    def __del__(self):
-        self.close()
-        
-        
-class Output:
-    '''Output wraper'''
-    def __init__(self, filename="Statistics.txt"):
-        self.filename = filename
-        
-    def open(self):
-        pass
-        
-    def write(self):
-        pass
-    
-    def close(self):
-        pass
-        
-    def __del__(self):
-        self.close()
-        
-
+       
 class FleetCounter:
     def __init__(self, input):
         self.input = input
