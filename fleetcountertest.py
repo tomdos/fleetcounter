@@ -191,7 +191,7 @@ class FleetCounterMockTest(unittest.TestCase):
         self.assertRaises(RuntimeError, fc.process)           
         
         
-    def testFleetCounter_wrong_slots_values(self):
+    def test_FleetCounter_wrong_slots_values(self):
         '''Different value than 0/1'''
         input = ("id,m1,4,1,2,1,1",)        
         fc = fleetcounter.FleetCounter(input)
@@ -199,7 +199,22 @@ class FleetCounterMockTest(unittest.TestCase):
         
         input = ("id,m1,4,,1,1,1",)
         fc = fleetcounter.FleetCounter(input)
-        self.assertRaises(RuntimeError, fc.process)         
+        self.assertRaises(RuntimeError, fc.process)
+        
+
+    def test_FleetCounter_wrong_input(self):    
+        input = ("",)        
+        fc = fleetcounter.FleetCounter(input)
+        self.assertRaises(ValueError, fc.process)
+        
+        input = (",",)        
+        fc = fleetcounter.FleetCounter(input)
+        self.assertRaises(ValueError, fc.process)     
+        
+        # parsing is processed but no host found..
+        input = (",,,",)        
+        fc = fleetcounter.FleetCounter(input)
+        self.assertRaises(RuntimeError, fc.process)              
 
 
 if __name__ == "__main__":
