@@ -17,35 +17,35 @@ class FleetCounterTest(unittest.TestCase):
         self.init_lineStats()
         slots = (0,0,0,0)
 
-        self.assertEqual(self.fc.getStrEmpty(), "EMPTY: M1=0; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrEmpty(), "EMPTY:M1=0;M2=0;M3=0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrEmpty(), "EMPTY: M1=1; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrEmpty(), "EMPTY:M1=1;M2=0;M3=0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrEmpty(), "EMPTY: M1=2; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrEmpty(), "EMPTY:M1=2;M2=0;M3=0;")
 
     def test_lineStats_full_count(self):
         self.init_lineStats()
         slots = (1,1,1,1)
 
-        self.assertEqual(self.fc.getStrFull(), "FULL: M1=0; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrFull(), "FULL:M1=0;M2=0;M3=0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrFull(), "FULL: M1=1; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrFull(), "FULL:M1=1;M2=0;M3=0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrFull(), "FULL: M1=2; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrFull(), "FULL:M1=2;M2=0;M3=0;")
 
     def test_lineStats_mostFilled_count(self):
         self.init_lineStats()
         slots = (0,0,1,1)
 
-        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED: M1=0,0; M2=0,0; M3=0,0;")
+        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED:M1=0,0;M2=0,0;M3=0,0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED: M1=1,2; M2=0,0; M3=0,0;")
+        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED:M1=1,2;M2=0,0;M3=0,0;")
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED: M1=2,2; M2=0,0; M3=0,0;")
+        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED:M1=2,2;M2=0,0;M3=0,0;")
 
         slots = (0,1,1,1)
         self.fc.lineStats(self.host, self.instance, self.n, slots)
-        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED: M1=1,1; M2=0,0; M3=0,0;")
+        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED:M1=1,1;M2=0,0;M3=0,0;")
 
     def test_sanityHost(self):
         self.assertRaises(RuntimeError, self.fc.sanityHost, '')
@@ -86,13 +86,13 @@ class FleetCounterTest(unittest.TestCase):
         self.assertRaises(AttributeError, self.fc.process)
 
     def test_getStrEmpty(self):
-        self.assertEqual(self.fc.getStrEmpty(), "EMPTY: M1=0; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrEmpty(), "EMPTY:M1=0;M2=0;M3=0;")
 
     def test_getStrFull(self):
-        self.assertEqual(self.fc.getStrFull(), "FULL: M1=0; M2=0; M3=0;")
+        self.assertEqual(self.fc.getStrFull(), "FULL:M1=0;M2=0;M3=0;")
 
     def test_getStrMostFilled(self):
-        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED: M1=0,0; M2=0,0; M3=0,0;")
+        self.assertEqual(self.fc.getStrMostFilled(), "MOST FILLED:M1=0,0;M2=0,0;M3=0,0;")
 
 
 
@@ -114,9 +114,9 @@ class FleetCounterMockTest(unittest.TestCase):
         
         fc = fleetcounter.FleetCounter(input)
         fc.process()
-        self.assertEqual(fc.getStrEmpty(), "EMPTY: M1=1; M2=1; M3=3;")
-        self.assertEqual(fc.getStrFull(), "FULL: M1=1; M2=1; M3=3;")
-        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED: M1=0,0; M2=0,0; M3=0,0;")
+        self.assertEqual(fc.getStrEmpty(), "EMPTY:M1=1;M2=1;M3=3;")
+        self.assertEqual(fc.getStrFull(), "FULL:M1=1;M2=1;M3=3;")
+        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED:M1=0,0;M2=0,0;M3=0,0;")
 
 
     def test_FleetCounter_ok_half(self):
@@ -131,9 +131,9 @@ class FleetCounterMockTest(unittest.TestCase):
         
         fc = fleetcounter.FleetCounter(input)
         fc.process()
-        self.assertEqual(fc.getStrEmpty(), "EMPTY: M1=1; M2=0; M3=1;")
-        self.assertEqual(fc.getStrFull(), "FULL: M1=0; M2=1; M3=1;")
-        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED: M1=0,0; M2=0,0; M3=1,1;")
+        self.assertEqual(fc.getStrEmpty(), "EMPTY:M1=1;M2=0;M3=1;")
+        self.assertEqual(fc.getStrFull(), "FULL:M1=0;M2=1;M3=1;")
+        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED:M1=0,0;M2=0,0;M3=1,1;")
          
 
     def test_FleetCounter_ok_most(self):
@@ -150,9 +150,9 @@ class FleetCounterMockTest(unittest.TestCase):
         
         fc = fleetcounter.FleetCounter(input)
         fc.process()
-        self.assertEqual(fc.getStrEmpty(), "EMPTY: M1=0; M2=0; M3=0;")
-        self.assertEqual(fc.getStrFull(), "FULL: M1=0; M2=0; M3=0;")
-        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED: M1=4,1; M2=1,5; M3=2,5;")
+        self.assertEqual(fc.getStrEmpty(), "EMPTY:M1=0;M2=0;M3=0;")
+        self.assertEqual(fc.getStrFull(), "FULL:M1=0;M2=0;M3=0;")
+        self.assertEqual(fc.getStrMostFilled(), "MOST FILLED:M1=4,1;M2=1,5;M3=2,5;")
         
         
     def test_FleetCounter_not_id(self):    

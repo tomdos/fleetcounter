@@ -126,15 +126,15 @@ class FleetCounter:
             raise 
 
     def getStrEmpty(self):
-        return "EMPTY: M1={}; M2={}; M3={};".format(self.empty['M1'],
+        return "EMPTY:M1={};M2={};M3={};".format(self.empty['M1'],
             self.empty['M2'], self.empty['M3'])
 
     def getStrFull(self):
-        return "FULL: M1={}; M2={}; M3={};".format(self.full['M1'],
+        return "FULL:M1={};M2={};M3={};".format(self.full['M1'],
             self.full['M2'], self.full['M3'])
 
     def getStrMostFilled(self):
-        return "MOST FILLED: M1={},{}; M2={},{}; M3={},{};".format(
+        return "MOST FILLED:M1={},{};M2={},{};M3={},{};".format(
             self.mostFilled['M1'][0], self.mostFilled['M1'][1],
             self.mostFilled['M2'][0], self.mostFilled['M2'][1],
             self.mostFilled['M3'][0], self.mostFilled['M3'][1],
