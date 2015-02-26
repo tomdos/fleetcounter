@@ -3,20 +3,45 @@
 import sys
 
 class DataSource:
+    '''Data source wraper for input.'''
     def __init__(self, filename="FleetState.txt"):
         self.filename = filename
 
     def open(self):
-        self.fd = open(self.filename,"r")
+        try:
+            self.fd = open(self.filename,"r")
+        except (FileNotFoundError, PermissionError):
+            sys.stderr.write("Unable to open input file '{}'.\n".format(self.filename))
+            raise
+        except:
+            raise
+                        
         return self.fd
 
     def close(self):
         self.fd.close()
 
     def __del__(self):
-        #self.fd.close()
+        self.close()
+        
+        
+class Output:
+    '''Output wraper'''
+    def __init__(self, filename="Statistics.txt"):
+        self.filename = filename
+        
+    def open(self):
         pass
-
+        
+    def write(self):
+        pass
+    
+    def close(self):
+        pass
+        
+    def __del__(self):
+        self.close()
+        
 
 class FleetCounter:
     def __init__(self, input):
@@ -27,7 +52,7 @@ class FleetCounter:
 
 
     def lineStats(self, host, instance, n, slots):
-        #print("{} {} {} {}".format(host, instance, n, slots))
+        '''Count statistics for each type - empty, full, most filled.'''
 
         slotsSum = sum(slots)
 
@@ -80,7 +105,11 @@ class FleetCounter:
         Check and return correct form of N.
         N must be a number
         '''
-        try:
+        if n == '':
+            sys.stderr.write("N is missing.\n")
+            raise RuntimeError("N is missing.")        
+
+        try:                
             nNumber = int(n)
         except:
             sys.stderr.write("N must be a number.\n")
@@ -94,17 +123,12 @@ class FleetCounter:
         Slots will be returned as a tuple.
         Number of items in the tuple must match N.
         '''
-        #slots = slots.split(',')
-        #if n != len(slots):
-        #    sys.stderr.write("Number of slots is not equal to N.\n")
-        #    raise RuntimeError("Unexpected number of slots")
-
         try:
             slots = slots.split(',')
             slots = tuple(int(i) for i in slots if i == '1' or i == '0')
             if n != len(slots):
-                sys.stderr.write("Unexpected number of slots.\n")
-                raise RuntimeError("Unexpected number of slots")
+                sys.stderr.write("Wrong number of slots or value.\n")
+                raise RuntimeError("Wrong number of slots or value.")
         except:
             sys.stderr.write("Slot state must be either 0 or 1.\n")
             raise
@@ -112,6 +136,7 @@ class FleetCounter:
         return slots
 
     def processLine(self, line):
+        '''Parse one line and check each item.'''
         try:
             host, instance, n, slots = line.split(',', 3) # check errors
         except:
@@ -121,19 +146,25 @@ class FleetCounter:
         # Convert(and check) an input to propper format
         try:
             host = self.sanityHost(host)
-            instanace = self.sanityInstance(instance)
+            instance = self.sanityInstance(instance)
             n = self.sanityN(n)
             slots = self.sanitySlots(n, slots)
         except:
             sys.stderr.write("Unexpected item in line: " + line + "\n")
+            raise
 
         self.lineStats(host, instance, n, slots)
 
 
     def process(self):
-        for line in self.input:
-            line = line.strip()
-            self.processLine(line)
+        '''Process every line.'''
+        try:
+            for line in self.input:
+                line = line.strip()
+                self.processLine(line)
+        except:
+            sys.stderr.write("Unable to process input.\n")
+            raise 
 
     def getStrEmpty(self):
         return "EMPTY: M1={}; M2={}; M3={};".format(self.empty['M1'],
@@ -149,7 +180,8 @@ class FleetCounter:
             self.mostFilled['M2'][0], self.mostFilled['M2'][1],
             self.mostFilled['M3'][0], self.mostFilled['M3'][1],
             )
-
+            
+            
     def printEmpty(self):
         print(self.getStrEmpty())
 
@@ -160,11 +192,43 @@ class FleetCounter:
         print(self.getStrMostFilled())
 
 
-if __name__ == "__main__":
-    ds = DataSource()
 
-    fc = FleetCounter(("ii1,m1,4,0,0,0,0"))
-    fc.process()
-    fc.printEmpty()
-    fc.printFull()
-    fc.printMostFilled()
+if __name__ == "__main__":
+    INPUTFILENAME="FleetState.txt"
+    OUTPUTFILENAME="Statistics.txt"
+    
+    try:
+        fin = open(INPUTFILENAME, "r")
+    except:
+        sys.stderr.write("Unable to open input file '{}'\n".format(INPUTFILE))
+        raise
+    
+    try:
+        fout = open(OUTPUTFILENAME, "w")
+    except: 
+        sys.stderr.write("Unable to open output file '{}'\n".format(INPUTFILE))
+        raise
+
+    try:
+        fc = FleetCounter(fin)
+        fc.process()
+        fout.write(fc.getStrEmpty()+"\n")
+        fout.write(fc.getStrFull()+"\n")
+        fout.write(fc.getStrMostFilled()+"\n")
+            
+        #fc.printEmpty()
+        #fc.printFull()
+        #fc.printMostFilled()
+    except:
+        sys.stderr.write("Could not process fleet state.\n")
+        raise
+    finally:
+        fin.close()
+        fout.close()
+        
+    fout.close()
+    fin.close()
+    
+    sys.exit(0)
+    
+    
